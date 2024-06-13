@@ -1,29 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
-
+import { useNavigate} from "react-router-dom";
+import { useBlogPost } from "../assets/useBlogPost";
 function ViewPostPage() {
   const navigate = useNavigate();
-
-  const [posts, setPosts] = useState([]);
-  const [isError, setIsError] = useState(null);
-  const [isLoading, setIsLoading] = useState(null);
-
-  const getPosts = async () => {
-    try {
-      setIsError(false);
-      setIsLoading(true);
-      const results = await axios("http://localhost:4000/posts");
-      setPosts(results.data.data);
-      setIsLoading(false);
-    } catch (error) {
-      setIsError(true);
-    }
-  };
-
-  useEffect(() => {
-    getPosts();
-  }, []);
+  const {posts,isLoading,isError} = useBlogPost()
 
   return (
     <div>
@@ -41,7 +20,8 @@ function ViewPostPage() {
             <div key={post.id} className="post">
               <h1>{post.title}</h1>
               <div className="post-actions">
-                <button className="view-button">View post</button>
+                <button className="view-button" onClick={()=>navigate(`/post/view/${post.id}`)}>View post</button>
+                <button className="edit-button" onClick={()=>navigate(`/post/edit/${post.id}`)}>Edit</button>
               </div>
             </div>
           );
